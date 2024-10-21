@@ -15,7 +15,6 @@ public class AsyncService {
     public CompletableFuture<String> processTask(int taskNumber) {
         log.info("Task {} başladı. Thread: {}", taskNumber, Thread.currentThread().getName());
         try {
-            // Simülasyon için işlem süresi
             TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {
             log.error("Task {} kesintiye uğradı.", taskNumber);
