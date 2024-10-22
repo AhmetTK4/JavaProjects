@@ -14,10 +14,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class TaskSchedulerService {
 
+    private final EmailService emailService;
 
     private final Map<String, AtomicInteger> taskCounts = new ConcurrentHashMap<>();
 
-    public TaskSchedulerService() {
+    public TaskSchedulerService(EmailService emailService) {
+        this.emailService = emailService;
         taskCounts.put("task1", new AtomicInteger(0));
         taskCounts.put("task2", new AtomicInteger(0));
     }
@@ -27,6 +29,14 @@ public class TaskSchedulerService {
     public void scheduledTask1() {
         int count = taskCounts.get("task1").incrementAndGet();
         log.info("Scheduled Task 1 çalıştı. Sayı: {}", count);
+    }
+
+    @Scheduled(fixedRate = 30000) // Her 30 saniyede bir çalışan görev
+    public void notifyOnTaskCompletion() {
+        int count = taskCounts.get("task1").get();
+        emailService.sendEmail("testdenemekafka@gmail.com",
+                "Görev Tamamlandı",
+                "Task 1 tamamlandı. Mevcut sayaç: " + count);
     }
 
 
