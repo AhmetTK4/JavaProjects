@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TaskSchedulerService {
 
     private final EmailService emailService;
-
     private final Map<String, AtomicInteger> taskCounts = new ConcurrentHashMap<>();
 
     public TaskSchedulerService(EmailService emailService) {
@@ -24,26 +23,22 @@ public class TaskSchedulerService {
         taskCounts.put("task2", new AtomicInteger(0));
     }
 
-
-    @Scheduled(fixedRate = 5000)
-    public void scheduledTask1() {
+    public void executeTask1() {
         int count = taskCounts.get("task1").incrementAndGet();
-        log.info("Scheduled Task 1 çalıştı. Sayı: {}", count);
+        log.info("Task 1 çalıştı. Sayı: {}", count);
     }
 
-    @Scheduled(fixedRate = 30000) // Her 30 saniyede bir çalışan görev
     public void notifyOnTaskCompletion() {
         int count = taskCounts.get("task1").get();
-        emailService.sendEmail("testdenemekafka@gmail.com",
+        emailService.sendEmail(
+                "testdenemekafka@gmail.com",
                 "Görev Tamamlandı",
-                "Task 1 tamamlandı. Mevcut sayaç: " + count);
+                "Task 1 tamamlandı. Mevcut sayaç: " + count
+        );
     }
 
-
-    @Scheduled(fixedRate = 10000)
-    public void scheduledTask2() {
+    public void executeTask2() {
         int count = taskCounts.get("task2").incrementAndGet();
-        log.info("Scheduled Task 2 çalıştı. Sayı: {}", count);
+        log.info("Task 2 çalıştı. Sayı: {}", count);
     }
-
 }
