@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.2.0</version> <!-- Versiyonu gerektiğinde güncelle -->
+            <version>2.6.0</version> <!-- Versiyonu gerektiğinde güncelle -->
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>
