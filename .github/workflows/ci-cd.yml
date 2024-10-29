@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        project: [PlayWithGenerics, PlayWithStreams]
+        project: [PlayWithGenerics, PlayWithStreams] 
 
     steps:
       - name: Checkout code
@@ -38,22 +38,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: build  
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Simulate SSH Key Setup (No real server)
-      run: |
-        echo "Simulating SSH key setup..."
-        mkdir -p ~/.ssh
-        echo "fake-private-key" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+      - name: Simulate SSH Key Setup (No real server)
+        run: |
+          echo "Simulating SSH key setup..."
+          mkdir -p ~/.ssh
+          echo "fake-private-key" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
-    - name: Simulate Adding Server to Known Hosts
-      run: |
-        echo "Simulating ssh-keyscan..."
-        echo "your-server.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBfakekey1234567890" >> ~/.ssh/known_hosts
+      - name: Simulate Adding Server to Known Hosts
+        run: |
+          echo "Simulating ssh-keyscan..."
+          echo "your-server.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBfakekey1234567890" >> ~/.ssh/known_hosts
 
-    - name: Simulate Deployment
-      run: |
-        echo "Simulating deployment process..."
-        bash ./deploy-script.sh
+      - name: Simulate Deployment
+        run: |
+          echo "Simulating deployment process..."
+          bash ./scripts/deploy-script.sh  
