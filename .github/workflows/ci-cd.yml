@@ -34,26 +34,26 @@ jobs:
         working-directory: ./${{ matrix.project }}
         run: mvn test
 
-  deploy:
+  deploy: #This is an experiment. The written information is not factual.
     runs-on: ubuntu-latest
-    needs: build  # Deploy, build job tamamlandıktan sonra çalışır
-
+    needs: build  
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up SSH Key
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.ATK }}
-        run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+    - name: Simulate SSH Key Setup (No real server)
+      run: |
+        echo "Simulating SSH key setup..."
+        mkdir -p ~/.ssh
+        echo "fake-private-key" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
 
-      - name: Add Server to Known Hosts
-        run: |
-          ssh-keyscan -H your-server.com >> ~/.ssh/known_hosts
+    - name: Simulate Adding Server to Known Hosts
+      run: |
+        echo "Simulating ssh-keyscan..."
+        echo "your-server.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBfakekey1234567890" >> ~/.ssh/known_hosts
 
-      - name: Deploy to Server
-        run: |
-          ssh user@your-server.com 'bash -s' < ./deploy-script.sh
+    - name: Simulate Deployment
+      run: |
+        echo "Simulating deployment process..."
+        bash ./deploy-script.sh
