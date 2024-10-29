@@ -7,4 +7,22 @@ updates:
     open-pull-requests-limit: 5 
     rebase-strategy: "auto" 
     ignore:
-      - dependency-name: "org.springframework.*" 
+      - dependency-name: "org.springframework.*"
+
+  - package-ecosystem: "maven"
+    directory: "/PlayWithGenerics"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    rebase-strategy: "auto"
+     ignore:
+      - dependency-name: "org.springframework.*"
+
+  - package-ecosystem: "maven"
+    directory: "/PlayWithStreams"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 3
+    rebase-strategy: "auto"
+     ignore:
+      - dependency-name: "org.springframework.*"
