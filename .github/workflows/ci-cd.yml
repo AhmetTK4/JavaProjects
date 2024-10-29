@@ -12,6 +12,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        project: [PlayWithGenerics, PlayWithStreams, PlayWithThreads, kullanici-servis]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -22,15 +26,17 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Build with Maven
+      - name: Build Maven Project - ${{ matrix.project }}
+        working-directory: ./${{ matrix.project }}
         run: mvn clean install
 
-      - name: Run Tests
+      - name: Run Tests for Maven Project - ${{ matrix.project }}
+        working-directory: ./${{ matrix.project }}
         run: mvn test
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build 
+    needs: build  # Deploy, build job tamamlandıktan sonra çalışır
 
     steps:
       - name: Checkout code
