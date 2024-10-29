@@ -26,3 +26,14 @@ updates:
     rebase-strategy: "auto"
     ignore:
       - dependency-name: "org.springframework.*"
+      
+  - package-ecosystem: "maven"
+    directory: "/ProxyDesignPattern"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 3
+    rebase-strategy: "auto"
+    ignore:
+      - dependency-name: "org.springframework.*"      
+
+      
