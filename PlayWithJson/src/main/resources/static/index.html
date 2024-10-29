@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spring Boot JSON Uygulaması</title>
+</head>
+<body>
+<h1>Veri Yönetim Sistemi</h1>
+
+<input type="text" id="nameInput" placeholder="İsim girin">
+<button onclick="addEntry()">Ekle</button>
+
+<ul id="dataList"></ul>
+
+<script>
+  async function fetchData() {
+    const response = await fetch('/api/data');
+    const data = await response.json();
+    const dataList = document.getElementById('dataList');
+    dataList.innerHTML = '';
+
+    data.forEach(entry => {
+      const listItem = document.createElement('li');
+      listItem.textContent = `${entry.name} (ID: ${entry.id})`;
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Sil';
+      deleteButton.onclick = () => deleteEntry(entry.id);
+      listItem.appendChild(deleteButton);
+      dataList.appendChild(listItem);
+    });
+  }
+
+  async function addEntry() {
+    const name = document.getElementById('nameInput').value;
+    if (!name) return alert('İsim boş olamaz!');
+
+    await fetch('/api/data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name })
+    });
+    fetchData();
+  }
+
+  async function deleteEntry(id) {
+    await fetch(`/api/data/${id}`, { method: 'DELETE' });
+    fetchData();
+  }
+
+  fetchData();
+</script>
+</body>
+</html>
