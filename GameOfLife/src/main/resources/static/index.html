@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Conway's Game of Life</title>
+    <style>
+        table { border-collapse: collapse; }
+        td { width: 20px; height: 20px; text-align: center; }
+        .alive { background-color: black; }
+        .dead { background-color: white; }
+    </style>
+</head>
+<body>
+<h2>Conway's Game of Life</h2>
+
+<!-- Form alanı: Kullanıcının rows, cols ve hız değerlerini girmesini sağlar -->
+<form id="gridForm">
+    <label>Rows: <input type="number" id="rows" value="10" min="1"></label>
+    <label>Columns: <input type="number" id="cols" value="10" min="1"></label>
+    <label>Update Interval (ms): <input type="number" id="interval" value="500" min="50"></label>
+    <button type="submit">Start</button>
+</form>
+
+<table id="grid"></table>
+
+<script>
+    document.getElementById('gridForm').onsubmit = (event) => {
+        event.preventDefault(); // Formun varsayılan gönderimini engeller
+        const rows = document.getElementById('rows').value;
+        const cols = document.getElementById('cols').value;
+        const interval = document.getElementById('interval').value;
+        startSimulation(rows, cols, interval);
+    };
+
+    let intervalId;
+
+    async function fetchNextGeneration(rows, cols) {
+        const response = await fetch(`/nextGeneration?rows=${rows}&cols=${cols}`);
+        const cells = await response.json();
+        const gridElement = document.getElementById("grid");
+
+        gridElement.innerHTML = ''; // Tabloyu temizle
+
+        cells.forEach(row => {
+            const rowElement = document.createElement("tr");
+            row.forEach(cell => {
+                const cellElement = document.createElement("td");
+                cellElement.className = cell.alive ? "alive" : "dead";
+                rowElement.appendChild(cellElement);
+            });
+            gridElement.appendChild(rowElement);
+        });
+    }
+
+    function startSimulation(rows, cols, updateInterval) {
+        if (intervalId) clearInterval(intervalId);
+        intervalId = setInterval(() => fetchNextGeneration(rows, cols), updateInterval);
+    }
+</script>
+</body>
+</html>
