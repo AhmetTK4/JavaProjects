@@ -2,17 +2,21 @@ package com.example.deneme;
 
 public class Game {
 
-    public void applyBirthRule (Cell cell){
-        if(!cell.isAlive() && cell.getNeighbours()==3){
+    public void applyBirthRule(Cell cell) {
+        if (!cell.isAlive() && cell.getNeighbours() == 3) {
             cell.setAlive(true);
-        }cell.setAlive(false);
+        } else {
+            cell.setAlive(false);
+        }
     }
 
-    public void applySurvivalRule(Cell cell){
-          if (cell.getNeighbours()==2||cell.getNeighbours()==3){
-              cell.setAlive(true);
-          }cell.setAlive(false);
-       }
+    public void applySurvivalRule(Cell cell) {
+        if (cell.getNeighbours() == 2 || cell.getNeighbours() == 3) {
+            cell.setAlive(true);
+        } else {
+            cell.setAlive(false);
+        }
+    }
 
     private Grid grid;
 
