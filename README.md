@@ -22,6 +22,9 @@ This repository includes various Java projects:
 - **[ProxyDesignPattern](https://github.com/AhmetTK4/JavaProjects/tree/main/ProxyDesignPattern)**: Implements the Proxy design pattern in Java.
 - **[kullanici-servis](https://github.com/AhmetTK4/JavaProjects/tree/main/kullanici-servis)**: A service application for user management.
 
+## Service Documentation
+For details of each web service, see the [docs](docs) folder.
+
 ## Installation
 
 1. Clone this repository to your local machine:
