@@ -1,7 +1,7 @@
-package com.example.proxydesignpattern.controller;
+package com.atk.proxydesignpattern.controller;
 
-import com.example.proxydesignpattern.entity.User;
-import com.example.proxydesignpattern.service.UserServiceProxy;
+import com.atk.proxydesignpattern.entity.User;
+import com.atk.proxydesignpattern.service.UserServiceProxy;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

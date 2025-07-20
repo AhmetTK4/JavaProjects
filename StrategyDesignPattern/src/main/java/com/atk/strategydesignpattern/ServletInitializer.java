@@ -1,13 +1,11 @@
-package com.example.proxydesignpattern;
+package com.atk.strategydesignpattern;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 public class ServletInitializer extends SpringBootServletInitializer {
-
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(ProxyDesignPatternApplication.class);
+        return application.sources(StrategyDesignPatternApplication.class);
     }
-
 }

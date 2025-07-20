@@ -1,13 +1,11 @@
-package com.example.proxydesignpattern;
+package com.atk.strategydesignpattern;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ProxyDesignPatternApplication {
-
+public class StrategyDesignPatternApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ProxyDesignPatternApplication.class, args);
+        SpringApplication.run(StrategyDesignPatternApplication.class, args);
     }
-
 }

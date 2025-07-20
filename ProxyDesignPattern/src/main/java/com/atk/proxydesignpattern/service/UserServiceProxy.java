@@ -1,6 +1,6 @@
-package com.example.proxydesignpattern.service;
+package com.atk.proxydesignpattern.service;
 
-import com.example.proxydesignpattern.entity.User;
+import com.atk.proxydesignpattern.entity.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
