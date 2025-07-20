@@ -1,4 +1,4 @@
-package com.example.proxydesignpattern.entity;
+package com.atk.proxydesignpattern.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

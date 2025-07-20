@@ -1,7 +1,7 @@
-package com.example.proxydesignpattern.config;
+package com.atk.proxydesignpattern.config;
 
-import com.example.proxydesignpattern.entity.User;
-import com.example.proxydesignpattern.repository.UserRepository;
+import com.atk.proxydesignpattern.entity.User;
+import com.atk.proxydesignpattern.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,6 +1,6 @@
-package com.example.proxydesignpattern.repository;
+package com.atk.proxydesignpattern.repository;
 
-import com.example.proxydesignpattern.entity.User;
+import com.atk.proxydesignpattern.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
