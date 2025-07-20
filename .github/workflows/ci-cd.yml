@@ -25,14 +25,18 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Install Maven
+        run: sudo apt-get update && sudo apt-get install -y maven
 
       - name: Build Maven Project - ${{ matrix.project }}
         working-directory: ./${{ matrix.project }}
-        run: mvn clean install
+        run: mvn -B clean install
 
       - name: Run Tests for Maven Project - ${{ matrix.project }}
         working-directory: ./${{ matrix.project }}
-        run: mvn test
+        run: mvn -B test
 
   deploy: #This is an experiment. The written information is not factual.
     runs-on: ubuntu-latest
