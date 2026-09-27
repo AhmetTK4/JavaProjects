@@ -55,6 +55,10 @@ Each project focuses on a specific Java topic or design pattern. Navigate to the
   ```
 From another terminal, try `curl http://localhost:8080/employees/names-uppercase`. See [the service documentation](docs/PlayWithStreams.md) for its other endpoints. Stop any other example using port 8080 before starting this one.
 
+## Related writing
+
+[Mastering Code Coverage with JaCoCo in Java 21 and Spring Boot](https://medium.com/@ahmettemelkundupoglu/mastering-code-coverage-with-jacoco-in-java-21-and-spring-boot-7e09ee26c039) — [runnable example](jacoco-demo).
+
 ## Verification
 
 Each example is an independent Maven project. Run `mvn -B verify` from its directory. The GitHub Actions matrix verifies all ten Maven projects on pull requests and `main`. Tests and builds do not represent a production deployment. The scripts under `scripts/` are historical deployment simulations and are not run by CI.
