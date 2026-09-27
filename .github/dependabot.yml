@@ -16,6 +16,9 @@ updates:
     open-pull-requests-limit: 5
     # Keep springdoc aligned with Spring Boot 3.3; update together during migration.
     ignore:
+      # Boot 4 needs a coordinated Springdoc and test API migration.
+      - dependency-name: 'org.springframework.boot:*'
+        update-types: ['version-update:semver-major']
       - dependency-name: 'org.springdoc:*'
         versions: ['>=2.7.0']
   - package-ecosystem: maven
@@ -24,6 +27,11 @@ updates:
       interval: weekly
     open-pull-requests-limit: 5
     ignore:
+      # Keep the Boot 3 / Spring 6 / Kafka 3 stack compatible.
+      - dependency-name: 'org.springframework.boot:*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'org.springframework.kafka:*'
+        update-types: ['version-update:semver-major']
       - dependency-name: 'org.springdoc:*'
         update-types: ['version-update:semver-major']
   - package-ecosystem: github-actions
