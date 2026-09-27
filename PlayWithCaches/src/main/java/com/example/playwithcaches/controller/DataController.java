@@ -14,7 +14,7 @@ public class DataController {
         this.dataService = dataService;
     }
 
-    @GetMapping("/data")
+    @GetMapping(value = "/data", produces = "text/plain")
     public String getData(@RequestParam String param) {
         return dataService.getData(param);
     }
