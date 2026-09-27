@@ -61,6 +61,8 @@ Each example is an independent Maven project. Run `mvn -B verify` from its direc
 
 Spring Boot 3.3 examples use Springdoc 2.6.x according to the [upstream compatibility matrix](https://springdoc.org/v2/#what-is-the-compatibility-matrix-of-springdoc-openapi-with-spring-boot). Upgrade these together; Springdoc 3.x targets Spring Boot 4. The PlayWithThreads context test uses a mocked mail sender and disables Kafka listeners, so it needs no real email credentials or broker. Running its mail/Kafka features normally still requires the configured services.
 
+PlayWithThreads uses Spring Boot 3.5.13, springdoc 2.9.1 and Spring Kafka 3.3.16 to address GHSA-53w6-v7cv-fc9h, GHSA-xq69-5h5v-x9x4 and GHSA-xvfq-4q6q-gxx7. Its context test runs without a live mail or Kafka service.
+
 For contribution steps, see [CONTRIBUTING.md](CONTRIBUTING.md). For sensitive vulnerability reports, see [SECURITY.md](SECURITY.md).
 
 ## Contributing
@@ -72,7 +74,3 @@ Contributions are welcome! Please open an issue to discuss the changes you wish 
 This project is licensed under the MIT License.
 
 **[License](https://github.com/AhmetTK4/JavaProjects/blob/main/LICENSE)**
-
-
-
-

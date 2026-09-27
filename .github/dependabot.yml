@@ -9,7 +9,6 @@ updates:
       - /PlayWithGenerics
       - /PlayWithJson
       - /PlayWithStreams
-      - /PlayWithThreads
       - /ProxyDesignPattern
       - /kullanici-servis
     schedule:
@@ -19,8 +18,17 @@ updates:
     ignore:
       - dependency-name: 'org.springdoc:*'
         versions: ['>=2.7.0']
+  - package-ecosystem: maven
+    directory: /PlayWithThreads
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: 'org.springdoc:*'
+        update-types: ['version-update:semver-major']
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: monthly
+
 
