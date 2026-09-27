@@ -67,7 +67,7 @@
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
-            <version>3.3.16</version>
+            <version>4.1.1</version>
         </dependency>
 
         <!-- Spring Boot Actuator -->
