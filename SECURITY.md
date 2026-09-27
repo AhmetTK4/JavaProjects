@@ -1,21 +1,7 @@
-# Security Policy
+# Security policy
 
-## Supported Versions
+This repository contains learning examples, not supported production releases. There are no separately maintained version lines or guaranteed security response times.
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Please report suspected security problems privately to ahmettemelkundupoglu@gmail.com. Include the project, affected commit, reproduction steps, and potential impact. Do not include real credentials, personal data, or details of systems you do not own.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
-
-## Reporting a Vulnerability
-
-Use this section to tell people how to report a vulnerability.
-
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+For ordinary bugs or documentation corrections, open a GitHub issue. Dependencies are checked through Dependabot, but examples still require review and hardening before real deployment.
