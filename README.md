@@ -14,6 +14,9 @@ This repository, **JavaProjects**, is a collection of Java projects developed by
 
 This repository includes various Java projects:
 
+- **[GameOfLife](GameOfLife)**: Game of Life rules with behavior tests.
+- **[jacoco-demo](jacoco-demo)**: Calculator examples and a JaCoCo coverage setup.
+- **[StrategyDesignPattern](StrategyDesignPattern)**: Payment strategy selection with success and unknown-strategy tests.
 - **[PlayWithCaches](https://github.com/AhmetTK4/JavaProjects/tree/main/PlayWithCaches)**: Explores caching mechanisms in Java.
 - **[PlayWithGenerics](https://github.com/AhmetTK4/JavaProjects/tree/main/PlayWithGenerics)**: Provides examples on Java generics.
 - **[PlayWithJson](https://github.com/AhmetTK4/JavaProjects/tree/main/PlayWithJson)**: Demonstrates methods for handling JSON data in Java.
@@ -48,9 +51,17 @@ Each project focuses on a specific Java topic or design pattern. Navigate to the
 
   ```bash
   cd JavaProjects/PlayWithStreams
-  mvn exec:java -Dexec.mainClass="com.example.Main"
+  mvn spring-boot:run
   ```
-Note: Replace com.example.Main with the fully qualified name of the main class.
+From another terminal, try `curl http://localhost:8080/employees/names-uppercase`. See [the service documentation](docs/PlayWithStreams.md) for its other endpoints. Stop any other example using port 8080 before starting this one.
+
+## Verification
+
+Each example is an independent Maven project. Run `mvn -B verify` from its directory. The GitHub Actions matrix verifies all ten Maven projects on pull requests and `main`. Tests and builds do not represent a production deployment. The scripts under `scripts/` are historical deployment simulations and are not run by CI.
+
+Spring Boot 3.3 examples use Springdoc 2.6.x according to the [upstream compatibility matrix](https://springdoc.org/v2/#what-is-the-compatibility-matrix-of-springdoc-openapi-with-spring-boot). Upgrade these together; Springdoc 3.x targets Spring Boot 4. The PlayWithThreads context test uses a mocked mail sender and disables Kafka listeners, so it needs no real email credentials or broker. Running its mail/Kafka features normally still requires the configured services.
+
+For contribution steps, see [CONTRIBUTING.md](CONTRIBUTING.md). For sensitive vulnerability reports, see [SECURITY.md](SECURITY.md).
 
 ## Contributing
 

@@ -1,39 +1,26 @@
 version: 2
 updates:
-  - package-ecosystem: "maven" 
-    directory: "/PlayWithThreads" 
+  - package-ecosystem: maven
+    directories:
+      - /GameOfLife
+      - /jacoco-demo
+      - /StrategyDesignPattern
+      - /PlayWithCaches
+      - /PlayWithGenerics
+      - /PlayWithJson
+      - /PlayWithStreams
+      - /PlayWithThreads
+      - /ProxyDesignPattern
+      - /kullanici-servis
     schedule:
-      interval: "weekly" 
-    open-pull-requests-limit: 5 
-    rebase-strategy: "auto" 
-    ignore:
-      - dependency-name: "org.springframework.*"
-
-  - package-ecosystem: "maven"
-    directory: "/PlayWithGenerics"
-    schedule:
-      interval: "weekly"
+      interval: weekly
     open-pull-requests-limit: 5
-    rebase-strategy: "auto"
+    # Keep springdoc aligned with Spring Boot 3.3; update together during migration.
     ignore:
-      - dependency-name: "org.springframework.*"
-
-  - package-ecosystem: "maven"
-    directory: "/PlayWithStreams"
+      - dependency-name: 'org.springdoc:*'
+        versions: ['>=2.7.0']
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 3
-    rebase-strategy: "auto"
-    ignore:
-      - dependency-name: "org.springframework.*"
-      
-  - package-ecosystem: "maven"
-    directory: "/ProxyDesignPattern"
-    schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 3
-    rebase-strategy: "auto"
-    ignore:
-      - dependency-name: "org.springframework.*"      
+      interval: monthly
 
-      
