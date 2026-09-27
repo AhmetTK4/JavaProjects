@@ -22,7 +22,7 @@ public class GenericController {
         this.stringService = stringService;
     }
 
-    @PostMapping("/user")
+    @PostMapping(value = "/user", produces = "text/plain")
     @Operation(summary = "Yeni bir User ekle", description = "Bir kullanıcıyı listeye ekler")
     public String addUser(@RequestBody User user) {
         userService.addItem(user);
@@ -35,7 +35,7 @@ public class GenericController {
         return userService.getItems();
     }
 
-    @PostMapping("/string")
+    @PostMapping(value = "/string", produces = "text/plain")
     @Operation(summary = "Yeni bir String ekle", description = "Bir string veriyi listeye ekler")
     public String addString(@RequestBody String value) {
         stringService.addItem(value);

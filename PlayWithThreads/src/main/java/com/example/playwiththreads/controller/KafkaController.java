@@ -12,7 +12,7 @@ public class KafkaController {
 
     private final KafkaProducerService kafkaProducerService;
 
-    @PostMapping("/send-message")
+    @PostMapping(value = "/send-message", produces = "text/plain")
     public String sendMessage(@RequestParam String message) {
         kafkaProducerService.sendMessage("task-updates", message);
         return "Mesaj Kafka'ya gönderildi: " + message;

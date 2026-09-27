@@ -47,7 +47,7 @@ public class UserController {
             userService.updateUserEmail(id, newEmail);
             return ResponseEntity.ok("Email updated successfully.");
         } catch (RuntimeException e) {
-            return ResponseEntity.ok(e.getMessage());
+            return ResponseEntity.internalServerError().body("Unable to update email.");
         }
     }
 }

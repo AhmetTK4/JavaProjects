@@ -14,16 +14,24 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
-    # Keep springdoc aligned with Spring Boot 3.3; update together during migration.
+    # Coordinate future framework major upgrades with their companion libraries.
     ignore:
+      # Future Boot major releases require a coordinated migration.
+      - dependency-name: 'org.springframework.boot:*'
+        update-types: ['version-update:semver-major']
       - dependency-name: 'org.springdoc:*'
-        versions: ['>=2.7.0']
+        update-types: ['version-update:semver-major']
   - package-ecosystem: maven
     directory: /PlayWithThreads
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
     ignore:
+      # Keep the Boot 4 / Spring 7 / Kafka 4 stack compatible.
+      - dependency-name: 'org.springframework.boot:*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'org.springframework.kafka:*'
+        update-types: ['version-update:semver-major']
       - dependency-name: 'org.springdoc:*'
         update-types: ['version-update:semver-major']
   - package-ecosystem: github-actions

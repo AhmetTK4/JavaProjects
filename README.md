@@ -63,9 +63,25 @@ From another terminal, try `curl http://localhost:8080/employees/names-uppercase
 
 Each example is an independent Maven project. Run `mvn -B verify` from its directory. The GitHub Actions matrix verifies all ten Maven projects on pull requests and `main`. Tests and builds do not represent a production deployment. The scripts under `scripts/` are historical deployment simulations and are not run by CI.
 
-Spring Boot 3.3 examples use Springdoc 2.6.x according to the [upstream compatibility matrix](https://springdoc.org/v2/#what-is-the-compatibility-matrix-of-springdoc-openapi-with-spring-boot). Upgrade these together; Springdoc 3.x targets Spring Boot 4. The PlayWithThreads context test uses a mocked mail sender and disables Kafka listeners, so it needs no real email credentials or broker. Running its mail/Kafka features normally still requires the configured services.
+To run CI manually, open **Actions → Verify Java examples → Run workflow**.
+Open a completed run's **Artifacts** section to download `build-<project>-<attempt>`
+and `reports-<project>-<attempt>` archives (retained for 14 days). Builds are uploaded
+only after successful verification; test reports are retained even when tests fail.
+The Quarkus build includes the entire `quarkus-app` directory: keep its libraries
+together with `quarkus-run.jar`. These are Maven build outputs, not deployments;
+the existing packaging of each example is preserved.
 
-PlayWithThreads uses Spring Boot 3.5.13, springdoc 2.9.1 and Spring Kafka 3.3.16 to address GHSA-53w6-v7cv-fc9h, GHSA-xq69-5h5v-x9x4 and GHSA-xvfq-4q6q-gxx7. Its context test runs without a live mail or Kafka service.
+The Spring Boot web examples use Boot 4.1.1 and, where applicable, Springdoc
+3.1.1. PlayWithThreads also uses Spring Kafka 4.1.1 and the Boot Kafka starter.
+The migration updates the JPA/MVC test modules and uses MockitoBean for the
+mock mail sender. The thread example's tests disable Kafka listeners and need
+no real email credentials or broker. Running its mail/Kafka features normally
+still requires the configured services.
+
+Dependabot keeps minor/patch updates enabled. Future Boot, Kafka and Springdoc
+major upgrades require a coordinated migration of their companion libraries and
+test APIs. The September 2026 isolated major-update failures were resolved by
+integrating those updates together; historical failed runs remain in Actions.
 
 For contribution steps, see [CONTRIBUTING.md](CONTRIBUTING.md). For sensitive vulnerability reports, see [SECURITY.md](SECURITY.md).
 
