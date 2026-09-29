@@ -1,42 +1,77 @@
 package com.atk.proxydesignpattern;
 
 import com.atk.proxydesignpattern.entity.User;
+import com.atk.proxydesignpattern.exception.AuthenticationRequiredException;
+import com.atk.proxydesignpattern.exception.ForbiddenOperationException;
+import com.atk.proxydesignpattern.exception.UserNotFoundException;
 import com.atk.proxydesignpattern.repository.UserRepository;
+import com.atk.proxydesignpattern.security.CallerContext;
+import com.atk.proxydesignpattern.service.UserServiceImpl;
 import com.atk.proxydesignpattern.service.UserServiceProxy;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
-import org.springframework.context.annotation.Import;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Import({UserServiceProxy.class, com.atk.proxydesignpattern.service.UserServiceImpl.class})
 class UserServiceProxyTest {
 
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
+    private String caller;
     private UserServiceProxy service;
+    private User admin;
+    private User regular;
 
     @BeforeEach
     void setUp() {
         userRepository.deleteAll();
-        userRepository.save(new User("adminUser", "admin", "admin@test.com"));
-        userRepository.save(new User("regularUser", "user", "user@test.com"));
+        admin = userRepository.save(new User("adminUser", "admin", "admin@test.com"));
+        regular = userRepository.save(new User("regularUser", "user", "user@test.com"));
+        CallerContext callerContext = () -> Optional.ofNullable(caller);
+        service = new UserServiceProxy(new UserServiceImpl(userRepository), callerContext);
     }
 
     @Test
-    void adminCanUpdate() {
-        User admin = userRepository.findByUsername("adminUser").orElseThrow();
-        service.updateUserEmail(admin.getId(), "new@test.com");
-        Assertions.assertEquals("new@test.com", userRepository.findById(admin.getId()).get().getEmail());
+    void adminCallerCanUpdateAnotherUsersEmail() {
+        caller = "adminUser";
+        service.updateUserEmail(regular.getId(), "new@test.com");
+        assertEquals("new@test.com", userRepository.findById(regular.getId()).orElseThrow().getEmail());
     }
 
     @Test
-    void userCannotUpdate() {
-        User user = userRepository.findByUsername("regularUser").orElseThrow();
-        Assertions.assertThrows(RuntimeException.class, () -> service.updateUserEmail(user.getId(), "new@test.com"));
+    void regularCallerCannotUpdateAdminEmail() {
+        caller = "regularUser";
+        assertThrows(ForbiddenOperationException.class,
+                () -> service.updateUserEmail(admin.getId(), "hijack@test.com"));
+        assertEquals("admin@test.com", userRepository.findById(admin.getId()).orElseThrow().getEmail());
+    }
+
+    @Test
+    void regularCallerCannotUpdateAnyEmail() {
+        caller = "regularUser";
+        assertThrows(ForbiddenOperationException.class,
+                () -> service.updateUserEmail(regular.getId(), "new@test.com"));
+    }
+
+    @Test
+    void missingOrUnknownCallerIsRejected() {
+        caller = null;
+        assertThrows(AuthenticationRequiredException.class,
+                () -> service.updateUserEmail(regular.getId(), "new@test.com"));
+        caller = "ghost";
+        assertThrows(AuthenticationRequiredException.class,
+                () -> service.updateUserEmail(regular.getId(), "new@test.com"));
+    }
+
+    @Test
+    void adminUpdatingMissingUserGetsNotFound() {
+        caller = "adminUser";
+        assertThrows(UserNotFoundException.class, () -> service.updateUserEmail(9999L, "new@test.com"));
     }
 }

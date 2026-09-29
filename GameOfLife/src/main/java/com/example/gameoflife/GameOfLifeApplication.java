@@ -1,13 +1,13 @@
-package com.example.deneme;
+package com.example.gameoflife;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DenemeApplication {
+public class GameOfLifeApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DenemeApplication.class, args);
+        SpringApplication.run(GameOfLifeApplication.class, args);
     }
 
 }
