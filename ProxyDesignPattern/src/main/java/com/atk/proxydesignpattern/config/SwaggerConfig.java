@@ -16,6 +16,6 @@ public class SwaggerConfig {
                         .title("User Management API")
                         .version("1.0.0")
                         .description("Proxy Design Pattern ile geliştirilmiş kullanıcı yönetimi API'si")
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org")));
+                        .license(new License().name("MIT").url("https://github.com/AhmetTK4/JavaProjects/blob/main/LICENSE")));
     }
 }

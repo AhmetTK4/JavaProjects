@@ -15,6 +15,6 @@ public class SwaggerConfig {
                         .title("Strategy Pattern API")
                         .version("1.0.0")
                         .description("Strategy Design Pattern example")
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org")));
+                        .license(new License().name("MIT").url("https://github.com/AhmetTK4/JavaProjects/blob/main/LICENSE")));
     }
 }
