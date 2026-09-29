@@ -1,6 +1,7 @@
 package com.example.playwithcaches.controller;
 
 import com.example.playwithcaches.service.DataService;
+import org.springframework.cache.CacheManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.Mockito.*;
@@ -14,7 +15,7 @@ class DataControllerSecurityTest {
         String payload = "<script>alert(1)</script>";
         DataService service = mock(DataService.class);
         when(service.getData(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
-        MockMvc mvc = standaloneSetup(new DataController(service)).build();
+        MockMvc mvc = standaloneSetup(new DataController(service, mock(CacheManager.class))).build();
         mvc.perform(get("/data").param("param", payload).accept("*/*"))
             .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith("text/plain"))
             .andExpect(content().string(payload));
