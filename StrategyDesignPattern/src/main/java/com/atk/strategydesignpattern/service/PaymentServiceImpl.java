@@ -1,9 +1,18 @@
 package com.atk.strategydesignpattern.service;
 
 import com.atk.strategydesignpattern.entity.Order;
+import com.atk.strategydesignpattern.entity.OrderStatus;
+import com.atk.strategydesignpattern.entity.PaymentType;
+import com.atk.strategydesignpattern.exception.OrderAlreadyPaidException;
+import com.atk.strategydesignpattern.exception.OrderNotFoundException;
+import com.atk.strategydesignpattern.exception.UnsupportedPaymentTypeException;
 import com.atk.strategydesignpattern.repository.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -11,11 +20,16 @@ import java.util.Optional;
 public class PaymentServiceImpl implements PaymentService {
 
     private final OrderRepository orderRepository;
-    private final Map<String, PaymentStrategy> strategies;
+    private final Map<PaymentType, PaymentStrategy> strategies = new EnumMap<>(PaymentType.class);
 
-    public PaymentServiceImpl(OrderRepository orderRepository, Map<String, PaymentStrategy> strategies) {
+    public PaymentServiceImpl(OrderRepository orderRepository, List<PaymentStrategy> strategies) {
         this.orderRepository = orderRepository;
-        this.strategies = strategies;
+        for (PaymentStrategy strategy : strategies) {
+            PaymentStrategy previous = this.strategies.put(strategy.type(), strategy);
+            if (previous != null) {
+                throw new IllegalStateException("Multiple strategies registered for " + strategy.type());
+            }
+        }
     }
 
     @Override
@@ -24,19 +38,28 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Order createOrder(String paymentType, double amount) {
-        Order order = new Order(paymentType, amount, "CREATED");
-        return orderRepository.save(order);
+    public Order createOrder(PaymentType paymentType, BigDecimal amount) {
+        // Reject unsupported types when the order is created, not when it is paid.
+        strategyFor(paymentType);
+        return orderRepository.save(new Order(paymentType, amount, OrderStatus.CREATED));
     }
 
     @Override
+    @Transactional
     public Order payOrder(Long id) {
-        Order order = orderRepository.findById(id).orElseThrow();
-        PaymentStrategy strategy = strategies.get(order.getPaymentType());
-        if (strategy == null) {
-            throw new IllegalArgumentException("Unknown payment type" + order.getPaymentType());
+        Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
+        if (order.isPaid()) {
+            throw new OrderAlreadyPaidException(id);
         }
-        strategy.pay(order);
+        strategyFor(order.getPaymentType()).pay(order);
         return orderRepository.save(order);
+    }
+
+    private PaymentStrategy strategyFor(PaymentType paymentType) {
+        PaymentStrategy strategy = strategies.get(paymentType);
+        if (strategy == null) {
+            throw new UnsupportedPaymentTypeException(paymentType);
+        }
+        return strategy;
     }
 }
