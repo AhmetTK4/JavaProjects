@@ -35,11 +35,16 @@
     const name = document.getElementById('nameInput').value;
     if (!name) return alert('İsim boş olamaz!');
 
-    await fetch('/api/data', {
+    const response = await fetch('/api/data', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name })
     });
+    if (!response.ok) {
+      const problem = await response.json().catch(() => ({}));
+      return alert(problem.detail || 'Kayıt eklenemedi.');
+    }
+    document.getElementById('nameInput').value = '';
     fetchData();
   }
 
