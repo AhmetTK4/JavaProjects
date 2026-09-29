@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Setter
@@ -17,13 +19,25 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String paymentType;
-    private double amount;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentType paymentType;
 
-    public Order(String paymentType, double amount, String status) {
+    // BigDecimal avoids binary floating-point rounding errors for money.
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal amount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderStatus status;
+
+    public Order(PaymentType paymentType, BigDecimal amount, OrderStatus status) {
         this.paymentType = paymentType;
         this.amount = amount;
         this.status = status;
+    }
+
+    public boolean isPaid() {
+        return status != OrderStatus.CREATED;
     }
 }
