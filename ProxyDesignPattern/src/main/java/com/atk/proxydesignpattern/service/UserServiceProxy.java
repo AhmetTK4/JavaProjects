@@ -1,45 +1,62 @@
 package com.atk.proxydesignpattern.service;
 
 import com.atk.proxydesignpattern.entity.User;
+import com.atk.proxydesignpattern.exception.AuthenticationRequiredException;
+import com.atk.proxydesignpattern.exception.ForbiddenOperationException;
+import com.atk.proxydesignpattern.exception.UserNotFoundException;
+import com.atk.proxydesignpattern.security.CallerContext;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Protection proxy: same interface as the real service, but checks the role of the
+ * <em>caller</em> before delegating write operations. Clients inject {@link UserService}
+ * and receive this proxy because it is {@link Primary}.
+ */
 @Service
+@Primary
 public class UserServiceProxy implements UserService {
-    private final UserServiceImpl userService;
+    private final UserService target;
+    private final CallerContext callerContext;
 
-    public UserServiceProxy(UserServiceImpl userService) {
-        this.userService = userService;
-    }
-
-    private boolean isAdmin(String role) {
-        return "admin".equalsIgnoreCase(role);
+    public UserServiceProxy(@Qualifier("userServiceImpl") UserService target, CallerContext callerContext) {
+        this.target = target;
+        this.callerContext = callerContext;
     }
 
     @Override
     public Optional<User> getUserById(Long id) {
-        return userService.getUserById(id);
+        return target.getUserById(id);
     }
 
     @Override
     public void updateUserEmail(Long id, String newEmail) {
-        Optional<User> optionalUser = userService.getUserById(id);
-
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            if (isAdmin(user.getRole())) {
-                userService.updateUserEmail(id, newEmail);
-            } else {
-                throw new RuntimeException("Unauthorized: Only admin can update email.");
-            }
-        } else {
-            throw new RuntimeException("User not found");
+        User caller = currentCaller();
+        if (!isAdmin(caller)) {
+            throw new ForbiddenOperationException("Only admins can update email addresses.");
         }
+        target.updateUserEmail(id, newEmail);
     }
 
     @Override
     public User findByUsername(String username) {
-        return userService.findByUsername(username);
+        return target.findByUsername(username);
+    }
+
+    private User currentCaller() {
+        String username = callerContext.currentUsername()
+                .orElseThrow(() -> new AuthenticationRequiredException("Caller identity is required."));
+        try {
+            return target.findByUsername(username);
+        } catch (UserNotFoundException e) {
+            throw new AuthenticationRequiredException("Unknown caller.");
+        }
+    }
+
+    private boolean isAdmin(User user) {
+        return "admin".equalsIgnoreCase(user.getRole());
     }
 }
