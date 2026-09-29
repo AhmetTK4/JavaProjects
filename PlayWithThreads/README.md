@@ -34,3 +34,15 @@ Swagger UI: http://localhost:8080/swagger-ui.html
 To send through Gmail instead, use an [app password](https://support.google.com/accounts/answer/185833):
 `MAIL_HOST=smtp.gmail.com MAIL_PORT=587 MAIL_SMTP_AUTH=true MAIL_STARTTLS=true EMAIL_USERNAME=... EMAIL_PASSWORD=...`.
 Never commit these values.
+
+## Virtual threads (Java 21)
+
+`GET /virtual-threads/compare?tasks=1000&blockingMillis=100&platformPoolSize=20` runs the same
+blocking tasks on a fixed pool of platform threads and on `Executors.newVirtualThreadPerTaskExecutor()`
+and returns both durations. With the defaults the platform pool needs about 5 s (50 rounds of 100 ms),
+while virtual threads finish in about 100 ms because a blocked virtual thread does not occupy an OS thread.
+
+Spring Boot can also run request handling, `@Async` and `@Scheduled` on virtual threads with
+`spring.threads.virtual.enabled=true`. This project keeps it off so the `AsyncThread-` pool in
+`AsyncConfig` remains visible; try enabling it and compare the thread names in the logs.
+Virtual threads help with blocking I/O, not CPU-bound work.
