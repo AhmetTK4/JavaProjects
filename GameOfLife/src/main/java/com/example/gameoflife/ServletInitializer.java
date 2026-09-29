@@ -1,4 +1,4 @@
-package com.example.deneme;
+package com.example.gameoflife;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -7,7 +7,7 @@ public class ServletInitializer extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(DenemeApplication.class);
+        return application.sources(GameOfLifeApplication.class);
     }
 
 }
