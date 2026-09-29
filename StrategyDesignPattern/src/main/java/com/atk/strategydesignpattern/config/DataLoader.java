@@ -15,6 +15,10 @@ public class DataLoader {
     @Bean
     public CommandLineRunner initDatabase(OrderRepository repository) {
         return args -> {
+            // Seed only an empty table so restarts against a persistent database do not duplicate rows.
+            if (repository.count() > 0) {
+                return;
+            }
             repository.save(new Order(PaymentType.CREDIT_CARD, new BigDecimal("100.00"), OrderStatus.CREATED));
             repository.save(new Order(PaymentType.PAYPAL, new BigDecimal("200.00"), OrderStatus.CREATED));
         };
