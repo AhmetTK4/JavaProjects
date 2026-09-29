@@ -85,6 +85,12 @@
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- Coverage for @QuarkusTest; the report is written to target/site/jacoco. -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jacoco</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- Tests run against in-memory H2 so they need no Docker/PostgreSQL. -->
         <dependency>
             <groupId>io.quarkus</groupId>
