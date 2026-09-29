@@ -17,7 +17,10 @@ public class AsyncService {
         try {
             TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {
-            log.error("Task {} kesintiye uğradı.", taskNumber);
+            // Kesinti bilgisini koru ki havuz ve çağıran taraf iptali görebilsin
+            Thread.currentThread().interrupt();
+            log.warn("Task {} kesintiye uğradı.", taskNumber);
+            return CompletableFuture.failedFuture(e);
         }
         log.info("Task {} tamamlandı.", taskNumber);
         return CompletableFuture.completedFuture("Task " + taskNumber + " sonucu");

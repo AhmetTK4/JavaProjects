@@ -1,0 +1,13 @@
+# Local services for PlayWithThreads: `docker compose up -d`
+services:
+  kafka:
+    # Single-node Kafka in KRaft mode (Kafka 4 no longer uses ZooKeeper).
+    image: apache/kafka:4.1.0
+    ports:
+      - "9092:9092"
+  mailpit:
+    # Catches outgoing e-mail; view it at http://localhost:8025
+    image: axllent/mailpit:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"

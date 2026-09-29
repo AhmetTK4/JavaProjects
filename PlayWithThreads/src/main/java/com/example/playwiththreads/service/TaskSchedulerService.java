@@ -1,16 +1,16 @@
 package com.example.playwiththreads.service;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Getter
 @Service
 @Slf4j
 public class TaskSchedulerService {
@@ -27,6 +27,7 @@ public class TaskSchedulerService {
         taskCounts.put("task2", new AtomicInteger(0));
     }
 
+    @Scheduled(fixedRateString = "${app.scheduler.task1-rate:PT30S}")
     public void executeTask1() {
         int count = taskCounts.get("task1").incrementAndGet();
         log.info("Task 1 çalıştı. Sayı: {}", count);
@@ -51,8 +52,16 @@ public class TaskSchedulerService {
         return true;
     }
 
+    @Scheduled(fixedRateString = "${app.scheduler.task2-rate:PT1M}")
     public void executeTask2() {
         int count = taskCounts.get("task2").incrementAndGet();
         log.info("Task 2 çalıştı. Sayı: {}", count);
+    }
+
+    /** Returns a read-only copy so callers cannot change the counters. */
+    public Map<String, Integer> taskCountsSnapshot() {
+        Map<String, Integer> snapshot = new TreeMap<>();
+        taskCounts.forEach((name, count) -> snapshot.put(name, count.get()));
+        return Collections.unmodifiableMap(snapshot);
     }
 }

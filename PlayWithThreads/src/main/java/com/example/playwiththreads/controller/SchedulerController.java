@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @RequestMapping("/tasks")
@@ -17,7 +16,7 @@ public class SchedulerController {
     private final TaskSchedulerService schedulerService;
 
     @GetMapping("/counts")
-    public Map<String, AtomicInteger> getTaskCounts() {
-        return schedulerService.getTaskCounts();
+    public Map<String, Integer> getTaskCounts() {
+        return schedulerService.taskCountsSnapshot();
     }
 }
