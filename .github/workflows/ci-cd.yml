@@ -34,8 +34,30 @@ jobs:
           distribution: temurin
           cache: maven
           cache-dependency-path: ${{ matrix.project }}/pom.xml
-      - name: Verify example
-        run: mvn -B -ntp -f ${{ matrix.project }}/pom.xml verify
+      - name: Verify example with coverage
+        env:
+          PROJECT: ${{ matrix.project }}
+          JACOCO: org.jacoco:jacoco-maven-plugin:0.8.15
+        run: |
+          case "$PROJECT" in
+            # These configure coverage themselves (jacoco-maven-plugin / quarkus-jacoco).
+            jacoco-demo|kullanici-servis)
+              mvn -B -ntp -f "$PROJECT/pom.xml" verify ;;
+            *)
+              mvn -B -ntp -f "$PROJECT/pom.xml" "$JACOCO:prepare-agent" verify "$JACOCO:report" ;;
+          esac
+      - name: Coverage summary
+        if: ${{ !cancelled() }}
+        env:
+          PROJECT: ${{ matrix.project }}
+          JAVA: ${{ matrix.java }}
+        run: |
+          csv="$PROJECT/target/site/jacoco/jacoco.csv"
+          if [ -f "$csv" ]; then
+            awk -F, -v p="$PROJECT" -v j="$JAVA" 'NR > 1 { missed += $8; covered += $9 }
+              END { if (missed + covered > 0) printf "**Line coverage** %s (JDK %s): %.1f%% (%d/%d lines)\n", p, j, 100 * covered / (missed + covered), covered, missed + covered }' \
+              "$csv" >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Upload test and coverage reports
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
