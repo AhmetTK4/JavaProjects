@@ -5,8 +5,11 @@ import com.example.playwithgenerics.model.User;
 import com.example.playwithgenerics.service.GenericService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -24,7 +27,7 @@ public class GenericController {
 
     @PostMapping(value = "/user", produces = "text/plain")
     @Operation(summary = "Yeni bir User ekle", description = "Bir kullanıcıyı listeye ekler")
-    public String addUser(@RequestBody User user) {
+    public String addUser(@Valid @RequestBody User user) {
         userService.addItem(user);
         return "User added: " + user;
     }
@@ -33,6 +36,18 @@ public class GenericController {
     @Operation(summary = "Tüm User'ları listele", description = "Tüm eklenmiş kullanıcıları döndürür")
     public List<User> getUsers() {
         return userService.getItems();
+    }
+
+    @GetMapping("/users/oldest")
+    @Operation(summary = "En yaşlı User'ı getir", description = "GenericService.max(Comparator<? super T>) örneği")
+    public ResponseEntity<User> getOldestUser() {
+        return ResponseEntity.of(userService.max(Comparator.comparingInt(User::age)));
+    }
+
+    @GetMapping("/users/names")
+    @Operation(summary = "User isimlerini listele", description = "Generic metot <R> map(Function<? super T, ? extends R>) örneği")
+    public List<String> getUserNames() {
+        return userService.map(User::name);
     }
 
     @PostMapping(value = "/string", produces = "text/plain")
