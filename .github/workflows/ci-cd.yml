@@ -11,19 +11,26 @@ concurrency:
   cancel-in-progress: true
 jobs:
   verify:
+    name: verify (${{ matrix.project }}, JDK ${{ matrix.java }})
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
         project: [GameOfLife, jacoco-demo, StrategyDesignPattern, PlayWithCaches, PlayWithGenerics, PlayWithJson, PlayWithStreams, PlayWithThreads, ProxyDesignPattern, kullanici-servis]
+        # 21 is the baseline; 25 catches newer-JDK breakage (e.g. annotation processing changes).
+        java: ['21', '25']
+        exclude:
+          # Quarkus 3.15 does not support Java 25; remove after upgrading Quarkus.
+          - project: kullanici-servis
+            java: '25'
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
       - uses: actions/setup-java@v6
         with:
-          java-version: '21'
+          java-version: ${{ matrix.java }}
           distribution: temurin
           cache: maven
           cache-dependency-path: ${{ matrix.project }}/pom.xml
@@ -33,7 +40,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
-          name: reports-${{ matrix.project }}-${{ github.run_attempt }}
+          name: reports-${{ matrix.project }}-jdk${{ matrix.java }}-${{ github.run_attempt }}
           path: |
             ${{ matrix.project }}/target/surefire-reports/
             ${{ matrix.project }}/target/failsafe-reports/
@@ -41,6 +48,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
       - name: Upload verified build
+        if: ${{ matrix.java == '21' }}
         uses: actions/upload-artifact@v7
         with:
           name: build-${{ matrix.project }}-${{ github.run_attempt }}

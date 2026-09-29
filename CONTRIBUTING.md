@@ -1,6 +1,6 @@
 # Contributing
 
-Use JDK 21 and Maven. Each project is independent: from the repository root, run `mvn -B -f <project>/pom.xml verify` for the example you change. CI verifies all ten examples.
+Use JDK 21 or newer and Maven. Each project is independent: from the repository root, run `mvn -B -f <project>/pom.xml verify` for the example you change. CI verifies all ten examples on JDK 21 and JDK 25.
 
 - Read the project's documentation under `docs/` and any local README.
 - For bugs, include the project name, reproduction steps, expected/actual behavior, and Java/Maven versions. Remove credentials from logs.
