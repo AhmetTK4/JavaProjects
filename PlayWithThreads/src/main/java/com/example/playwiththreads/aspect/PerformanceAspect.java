@@ -13,10 +13,13 @@ public class PerformanceAspect {
 
     @Around("@annotation(org.springframework.scheduling.annotation.Scheduled)")
     public Object measureExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
-        long start = System.currentTimeMillis();
-        Object result = joinPoint.proceed();
-        long end = System.currentTimeMillis();
-        log.info("{} metodu {} ms sürdü.", joinPoint.getSignature(), (end - start));
-        return result;
+        // nanoTime is monotonic; currentTimeMillis can jump when the wall clock changes.
+        long start = System.nanoTime();
+        try {
+            return joinPoint.proceed();
+        } finally {
+            long elapsedMs = (System.nanoTime() - start) / 1_000_000;
+            log.info("{} metodu {} ms sürdü.", joinPoint.getSignature().toShortString(), elapsedMs);
+        }
     }
 }
