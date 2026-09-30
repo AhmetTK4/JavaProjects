@@ -4,6 +4,23 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
 
+Endpoint reference: [docs/kullanici-servis.md](../docs/kullanici-servis.md). The service listens on port `9095`.
+
+## Configuration
+
+| Profile | Database |
+|---|---|
+| dev (`mvn quarkus:dev`) | PostgreSQL started automatically by [Dev Services](https://quarkus.io/guides/databases-dev-services) (requires Docker) |
+| test (`mvn verify`) | In-memory H2, no Docker needed |
+| prod (`java -jar ...`, container) | `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` environment variables (required, no defaults) |
+
+The schema is created by Flyway from `src/main/resources/db/migration` at startup.
+
+```shell script
+DB_URL=jdbc:postgresql://localhost:5432/postgres DB_USERNAME=postgres DB_PASSWORD=... \
+  java -jar target/quarkus-app/quarkus-run.jar
+```
+
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
@@ -55,18 +72,8 @@ If you want to learn more about building native executables, please consult <htt
 
 ## Related Guides
 
-- Hibernate ORM ([guide](https://quarkus.io/guides/hibernate-orm)): Define your persistent model with Hibernate ORM and
-  Jakarta Persistence
-- Reactive Routes ([guide](https://quarkus.io/guides/reactive-routes)): REST framework offering the route model to
-  define non blocking endpoints
-- JDBC Driver - PostgreSQL ([guide](https://quarkus.io/guides/datasource)): Connect to the PostgreSQL database via JDBC
-
-## Provided Code
-
-### Hibernate ORM
-
-Create your first JPA entity
-
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
-
-
+- REST with Jackson ([guide](https://quarkus.io/guides/rest-json))
+- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache))
+- Flyway ([guide](https://quarkus.io/guides/flyway))
+- Validation ([guide](https://quarkus.io/guides/validation))
+- SmallRye Health ([guide](https://quarkus.io/guides/smallrye-health))
