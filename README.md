@@ -71,6 +71,10 @@ The Quarkus build includes the entire `quarkus-app` directory: keep its librarie
 together with `quarkus-run.jar`. These are Maven build outputs, not deployments;
 the existing packaging of each example is preserved.
 
+CI also measures line coverage for every example with JaCoCo. The per-project figure appears in
+the run's summary, and the HTML report is part of the `reports-...` artifact (`target/site/jacoco/`).
+jacoco-demo additionally fails its build below 80% coverage.
+
 The Spring Boot web examples use Boot 4.1.1 and, where applicable, Springdoc
 3.1.1. PlayWithThreads also uses Spring Kafka 4.1.1 and the Boot Kafka starter.
 The migration updates the JPA/MVC test modules and uses MockitoBean for the
