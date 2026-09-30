@@ -15,8 +15,15 @@ authenticated principal (for example Spring Security) instead of a client-suppli
 | Kind | Where | How |
 |---|---|---|
 | Hand-written (static) proxy | `UserServiceProxy` | A class implementing `UserService` that adds the admin check before delegating. |
+| Caching proxy | `CachingUserServiceProxy` | Answers repeated reads from memory (TTL `app.user-cache.ttl`, default 1 min) and invalidates a user's entries when their email changes. Statistics: `GET /api/users/cache/stats`. |
 | JDK dynamic proxy | `dynamic/DynamicProxies.timed(...)` | `java.lang.reflect.Proxy` generates the class at runtime; one `InvocationHandler` times every method of any interface. |
 | Spring AOP proxy | `UserServiceImpl` (`@Transactional`) | Spring wraps the bean so transactions start and end around each call (`SpringProxyTest`). |
+
+Because every proxy implements `UserService`, they can be chained without knowing about each other:
+
+```
+UserController -> UserServiceProxy (protection) -> CachingUserServiceProxy (caching) -> UserServiceImpl (real subject)
+```
 
 ## Endpoints
 

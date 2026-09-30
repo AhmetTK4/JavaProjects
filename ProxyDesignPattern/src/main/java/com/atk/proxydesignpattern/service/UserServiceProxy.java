@@ -15,6 +15,8 @@ import java.util.Optional;
  * Protection proxy: same interface as the real service, but checks the role of the
  * <em>caller</em> before delegating write operations. Clients inject {@link UserService}
  * and receive this proxy because it is {@link Primary}.
+ * <p>
+ * Its target is the {@link CachingUserServiceProxy}, which in turn wraps {@link UserServiceImpl}.
  */
 @Service
 @Primary
@@ -22,7 +24,7 @@ public class UserServiceProxy implements UserService {
     private final UserService target;
     private final CallerContext callerContext;
 
-    public UserServiceProxy(@Qualifier("userServiceImpl") UserService target, CallerContext callerContext) {
+    public UserServiceProxy(@Qualifier("cachingUserServiceProxy") UserService target, CallerContext callerContext) {
         this.target = target;
         this.callerContext = callerContext;
     }
