@@ -17,13 +17,13 @@ This repository includes various Java projects:
 - **[GameOfLife](GameOfLife)**: Game of Life rules with behavior tests.
 - **[jacoco-demo](jacoco-demo)**: Calculator examples and a JaCoCo coverage setup.
 - **[StrategyDesignPattern](StrategyDesignPattern)**: Payment strategy selection with success and unknown-strategy tests.
-- **[PlayWithCaches](https://github.com/AhmetTK4/JavaProjects/tree/main/PlayWithCaches)**: Explores caching mechanisms in Java.
-- **[PlayWithGenerics](https://github.com/AhmetTK4/JavaProjects/tree/main/PlayWithGenerics)**: Provides examples on Java generics.
-- **[PlayWithJson](https://github.com/AhmetTK4/JavaProjects/tree/main/PlayWithJson)**: Demonstrates methods for handling JSON data in Java.
-- **[PlayWithStreams](https://github.com/AhmetTK4/JavaProjects/tree/main/PlayWithStreams)**: Offers examples using Java Stream API for data processing.
-- **[PlayWithThreads](https://github.com/AhmetTK4/JavaProjects/tree/main/PlayWithThreads)**: Contains examples of multithreading applications in Java.
-- **[ProxyDesignPattern](https://github.com/AhmetTK4/JavaProjects/tree/main/ProxyDesignPattern)**: Implements the Proxy design pattern in Java.
-- **[kullanici-servis](https://github.com/AhmetTK4/JavaProjects/tree/main/kullanici-servis)**: A service application for user management.
+- **[PlayWithCaches](PlayWithCaches)**: Explores caching mechanisms in Java.
+- **[PlayWithGenerics](PlayWithGenerics)**: Provides examples on Java generics.
+- **[PlayWithJson](PlayWithJson)**: Demonstrates methods for handling JSON data in Java.
+- **[PlayWithStreams](PlayWithStreams)**: Offers examples using Java Stream API for data processing.
+- **[PlayWithThreads](PlayWithThreads)**: Contains examples of multithreading applications in Java.
+- **[ProxyDesignPattern](ProxyDesignPattern)**: Implements the Proxy design pattern in Java.
+- **[kullanici-servis](kullanici-servis)**: A service application for user management.
 
 ## Service Documentation
 For details of each web service, see the [docs](docs) folder.
@@ -93,4 +93,4 @@ Contributions are welcome! Please open an issue to discuss the changes you wish 
 
 This project is licensed under the MIT License.
 
-**[License](https://github.com/AhmetTK4/JavaProjects/blob/main/LICENSE)**
+**[License](LICENSE)**
