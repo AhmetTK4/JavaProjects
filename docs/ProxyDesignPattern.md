@@ -10,6 +10,14 @@ Learning simplification: the caller is identified by the `X-User` request header
 (`adminUser` or `regularUser` from the seed data). A real application would use the
 authenticated principal (for example Spring Security) instead of a client-supplied header.
 
+## Three kinds of proxies in this project
+
+| Kind | Where | How |
+|---|---|---|
+| Hand-written (static) proxy | `UserServiceProxy` | A class implementing `UserService` that adds the admin check before delegating. |
+| JDK dynamic proxy | `dynamic/DynamicProxies.timed(...)` | `java.lang.reflect.Proxy` generates the class at runtime; one `InvocationHandler` times every method of any interface. |
+| Spring AOP proxy | `UserServiceImpl` (`@Transactional`) | Spring wraps the bean so transactions start and end around each call (`SpringProxyTest`). |
+
 ## Endpoints
 
 | Method | Path | Description |
