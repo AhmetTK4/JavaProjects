@@ -11,6 +11,7 @@ Showcases multithreading techniques with Spring Boot endpoints. See [PlayWithThr
 | POST | `/scheduler/task1` | Run task 1 now (it also runs every `app.scheduler.task1-rate`, default 30 s). |
 | POST | `/scheduler/task2` | Run task 2 now (it also runs every `app.scheduler.task2-rate`, default 1 min). |
 | POST | `/scheduler/notify` | E-mail the task 1 count to the operator-configured recipient. |
+| GET | `/virtual-threads/compare` | Run `tasks` blocking tasks on a fixed platform pool and on virtual threads and compare durations. |
 | GET | `/tasks/counts` | Current run counts of task 1 and task 2. |
 
 
