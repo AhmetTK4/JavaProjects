@@ -7,6 +7,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
@@ -26,6 +27,17 @@ public class DataController {
         return dataService.getData(param);
     }
 
+    /** Updates the value for {@code param} in the source and the cache (write-through). */
+    @PutMapping(value = "/data", consumes = "text/plain", produces = "text/plain")
+    public String updateData(@RequestParam String param, @RequestBody String value) {
+        return dataService.updateData(param, value);
+    }
+
+    @GetMapping(value = "/reference/{key}", produces = "text/plain")
+    public String getReference(@PathVariable String key) {
+        return dataService.getReference(key);
+    }
+
     @DeleteMapping("/data")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void evict(@RequestParam(required = false) String param) {
@@ -38,11 +50,14 @@ public class DataController {
 
     /** Hit/miss counters recorded by Caffeine ({@code recordStats()} in CacheConfig). */
     @GetMapping("/data/stats")
-    public Map<String, Object> stats() {
-        Cache<Object, Object> cache = ((CaffeineCache) cacheManager.getCache(DataService.CACHE_NAME)).getNativeCache();
-        CacheStats stats = cache.stats();
+    public Map<String, Object> stats(@RequestParam(defaultValue = DataService.CACHE_NAME) String cache) {
+        if (!(cacheManager.getCache(cache) instanceof CaffeineCache caffeineCache)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unknown cache: " + cache);
+        }
+        Cache<Object, Object> nativeCache = caffeineCache.getNativeCache();
+        CacheStats stats = nativeCache.stats();
         return Map.of(
-                "size", cache.estimatedSize(),
+                "size", nativeCache.estimatedSize(),
                 "hits", stats.hitCount(),
                 "misses", stats.missCount(),
                 "hitRate", stats.hitRate(),
