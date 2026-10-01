@@ -3,6 +3,8 @@ package com.example.playwithstreams.service;
 import com.example.playwithstreams.dto.SalaryRange;
 import com.example.playwithstreams.entity.Employee;
 import com.example.playwithstreams.repository.EmployeeRepository;
+import com.example.playwithstreams.stats.DepartmentReport;
+import com.example.playwithstreams.stats.SalaryStatsCollector;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -88,6 +90,19 @@ public class EmployeeService {
                         Collectors.minBy(BY_SALARY),
                         Collectors.maxBy(BY_SALARY),
                         (min, max) -> min.map(lowest -> new SalaryRange(lowest, max.orElseThrow()))));
+    }
+
+    /**
+     * One pass over the data with two consumers: {@code teeing} feeds every employee both to a
+     * {@code groupingBy} that applies the custom collector per department and to the same custom
+     * collector for the whole company.
+     */
+    public DepartmentReport departmentReport() {
+        return repository.findAll().stream()
+                .collect(Collectors.teeing(
+                        Collectors.groupingBy(Employee::getDepartment, TreeMap::new, SalaryStatsCollector.toSalaryStats()),
+                        SalaryStatsCollector.toSalaryStats(),
+                        DepartmentReport::new));
     }
 
     private static BigDecimal averageSalary(List<Employee> employees) {

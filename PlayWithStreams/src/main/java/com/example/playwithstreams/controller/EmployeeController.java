@@ -3,6 +3,7 @@ package com.example.playwithstreams.controller;
 import com.example.playwithstreams.dto.SalaryRange;
 import com.example.playwithstreams.entity.Employee;
 import com.example.playwithstreams.service.EmployeeService;
+import com.example.playwithstreams.stats.DepartmentReport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -79,5 +80,13 @@ public class EmployeeController {
             description = "Tek geçişte iki collector: teeing(minBy, maxBy)")
     public ResponseEntity<SalaryRange> salaryRange() {
         return ResponseEntity.of(service.salaryRange());
+    }
+
+    @GetMapping("/department-report")
+    @Operation(summary = "Departman raporu",
+            description = "Her departman ve şirket geneli için kişi sayısı, toplam/ortalama/min/max maaş ve isimler. "
+                    + "Özel Collector + groupingBy + teeing, tek geçiş")
+    public DepartmentReport departmentReport() {
+        return service.departmentReport();
     }
 }
