@@ -16,3 +16,4 @@ in a real application, simple filters belong in repository queries.
 | GET | `/employees/average-salary-by-department` | `groupingBy` + `collectingAndThen` | Average salary per department. |
 | GET | `/employees/top-earner-by-department` | `toMap` + `BinaryOperator.maxBy` | Highest-paid employee per department. |
 | GET | `/employees/salary-range` | `teeing(minBy, maxBy)` | Lowest- and highest-paid employee in one pass. |
+| GET | `/employees/department-report` | custom `Collector.of(...)` + `groupingBy` + `teeing` | Per department and company-wide: headcount, total, average, min and max salary and sorted names, in one pass. |
