@@ -4,7 +4,20 @@ Spring Boot project illustrating stream operations over employee data. Salaries 
 so totals and averages are exact. The data is processed in memory to demonstrate the Stream API;
 in a real application, simple filters belong in repository queries.
 
-## Endpoints
+## Managing employees
+
+Paging, sorting and filtering here run in the database (Spring Data `Pageable`), unlike the
+in-memory stream examples below.
+
+| Method | Path | Description |
+|-------|------|-------------|
+| GET | `/employees?page=0&size=20&sort=salary,desc&department=IT` | Page of employees. `size` is capped at 100; `sort` accepts `id`, `name`, `department`, `salary` (others return `400`); `department` is case-insensitive. Response: `content`, `page`, `size`, `totalElements`, `totalPages`. |
+| GET | `/employees/{id}` | One employee, `404` if missing. |
+| POST | `/employees` | Create from `{"name", "department", "salary"}` (salary positive, at most two decimals). Returns `201` with `Location`. |
+| PUT | `/employees/{id}` | Replace name, department and salary. |
+| DELETE | `/employees/{id}` | Delete, `204` (or `404`). |
+
+## Stream endpoints
 
 | Method | Path | Stream feature | Description |
 |-------|------|----------------|-------------|
