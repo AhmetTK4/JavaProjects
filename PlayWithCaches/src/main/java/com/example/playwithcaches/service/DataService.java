@@ -15,8 +15,16 @@ public class DataService {
         this.dataSource = dataSource;
     }
 
-    /** The first call per {@code param} hits the slow source; later calls are served from the cache. */
-    @Cacheable(CACHE_NAME)
+    /**
+     * The first call per {@code param} hits the slow source; later calls are served from the cache.
+     * <ul>
+     *   <li>{@code sync = true}: when many requests miss the same key at once, only one of them
+     *       loads it and the others wait for that result (cache stampede protection).</li>
+     *   <li>{@code condition}: keys longer than 64 characters bypass the cache, so arbitrary long
+     *       inputs cannot push useful entries out of the size-limited cache.</li>
+     * </ul>
+     */
+    @Cacheable(cacheNames = CACHE_NAME, sync = true, condition = "#param.length() <= 64")
     public String getData(String param) {
         return dataSource.load(param);
     }
