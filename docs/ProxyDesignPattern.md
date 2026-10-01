@@ -17,6 +17,7 @@ authenticated principal (for example Spring Security) instead of a client-suppli
 | Hand-written (static) proxy | `UserServiceProxy` | A class implementing `UserService` that adds the admin check before delegating. |
 | JDK dynamic proxy | `dynamic/DynamicProxies.timed(...)` | `java.lang.reflect.Proxy` generates the class at runtime; one `InvocationHandler` times every method of any interface. |
 | Spring AOP proxy | `UserServiceImpl` (`@Transactional`) | Spring wraps the bean so transactions start and end around each call (`SpringProxyTest`). |
+| Spring AOP proxy with a custom aspect | `audit/EmailChangeAuditAspect` | `@Around` advice on the outermost `userServiceProxy` bean records every email change attempt, including rejected ones. |
 
 ## Endpoints
 
@@ -25,6 +26,7 @@ authenticated principal (for example Spring Security) instead of a client-suppli
 | GET | `/api/users/{id}` | Get a user by id. `404` if it does not exist. |
 | GET | `/api/users/name/{name}` | Find user by username. `404` if it does not exist. |
 | PUT | `/api/users/{id}/email` | Update user email using the `newEmail` parameter. Requires the `X-User` header of an admin. |
+| GET | `/api/audit/email-changes` | Email change attempts, newest first: actor, target user, old/new email, outcome (`SUCCESS`, `DENIED`, `FAILED`) and reason. Requires the `X-User` header of an admin. |
 
 Errors are returned as [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) problem details:
 `400` invalid email, `401` missing or unknown caller, `403` caller is not an admin, `404` user not found.
