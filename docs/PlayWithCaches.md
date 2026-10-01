@@ -4,6 +4,10 @@ Demonstrates caching with Spring's cache abstraction and Caffeine. `SlowDataSour
 expensive call (3 s by default); `DataService.getData` is `@Cacheable`, so only the first request
 per parameter is slow until the entry expires.
 
+`getData` uses `sync = true`: if many requests miss the same key at once, only one loads it and the
+others wait for its result (cache stampede protection). Keys longer than 64 characters bypass the
+cache (`condition`), so long arbitrary inputs cannot evict useful entries.
+
 ## Endpoints
 
 | Method | Path   | Parameters | Description                |

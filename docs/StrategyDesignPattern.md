@@ -6,14 +6,18 @@ Each `PaymentStrategy` bean declares the `PaymentType` it handles. `PaymentServi
 all strategies into an `EnumMap` at startup (two strategies for the same type fail fast) and picks
 the one matching the order's payment type. Adding a payment method means adding an enum constant
 and one strategy class; the service does not change.
+`BankTransferStrategy` was added exactly this way: it also stores a `paymentReference`
+(for example `BT-42-9F1C2A7B`) that the customer quotes on the transfer. `StrategyRegistrationTest`
+fails if a `PaymentType` has no strategy.
 
 ## Endpoints
 
 | Method | Path | Description |
 |-------|------|-------------|
-| POST | `/api/orders?type={CREDIT_CARD\|PAYPAL}&amount={amount}` | Create an order. `amount` must be positive with at most two decimals. Returns `201 Created`. |
+| POST | `/api/orders?type={CREDIT_CARD\|PAYPAL\|BANK_TRANSFER}&amount={amount}` | Create an order. `amount` must be positive with at most two decimals. Returns `201 Created`. |
 | POST | `/api/orders/{id}/pay` | Pay the order with the strategy for its payment type. `409` if it is already paid. |
 | GET | `/api/orders/{id}` | Get an order. `404` if it does not exist. |
+| GET | `/api/orders/payment-options?amount={amount}` | Fee and total for every payment method, cheapest first. Each strategy computes its own fee (`PaymentStrategy.fee`): credit card 2.5%, PayPal 3.4% + 0.35, free by default. |
 
 Errors are returned as problem details: `400` unknown payment type or invalid amount,
 `404` order not found, `409` order already paid.

@@ -7,6 +7,7 @@ import com.atk.strategydesignpattern.exception.OrderAlreadyPaidException;
 import com.atk.strategydesignpattern.exception.OrderNotFoundException;
 import com.atk.strategydesignpattern.exception.UnsupportedPaymentTypeException;
 import com.atk.strategydesignpattern.repository.OrderRepository;
+import com.atk.strategydesignpattern.service.BankTransferStrategy;
 import com.atk.strategydesignpattern.service.CreditCardStrategy;
 import com.atk.strategydesignpattern.service.PaymentService;
 import com.atk.strategydesignpattern.service.PaymentServiceImpl;
@@ -32,7 +33,7 @@ class PaymentServiceTest {
     @BeforeEach
     void setUp() {
         repository.deleteAll();
-        service = new PaymentServiceImpl(repository, List.of(new CreditCardStrategy(), new PaypalStrategy()));
+        service = new PaymentServiceImpl(repository, List.of(new CreditCardStrategy(), new PaypalStrategy(), new BankTransferStrategy()));
     }
 
     @Test
@@ -73,5 +74,22 @@ class PaymentServiceTest {
     void duplicateStrategiesAreRejected() {
         assertThrows(IllegalStateException.class,
                 () -> new PaymentServiceImpl(repository, List.of(new CreditCardStrategy(), new CreditCardStrategy())));
+    }
+
+    @Test
+    void bankTransferSetsStatusAndReference() {
+        Order order = service.createOrder(PaymentType.BANK_TRANSFER, new BigDecimal("250.00"));
+        service.payOrder(order.getId());
+        Order paid = repository.findById(order.getId()).orElseThrow();
+        assertEquals(OrderStatus.PAID_BY_BANK_TRANSFER, paid.getStatus());
+        assertTrue(paid.getPaymentReference().matches("BT-" + order.getId() + "-[0-9A-F]{8}"),
+                paid.getPaymentReference());
+    }
+
+    @Test
+    void otherMethodsDoNotSetAReference() {
+        Order order = service.createOrder(PaymentType.CREDIT_CARD, BigDecimal.TEN);
+        service.payOrder(order.getId());
+        assertNull(repository.findById(order.getId()).orElseThrow().getPaymentReference());
     }
 }
