@@ -31,6 +31,10 @@ public class Order {
     @Column(nullable = false)
     private OrderStatus status;
 
+    /** Reference the customer quotes on the transfer; set only by payment methods that need one. */
+    @Column(length = 40)
+    private String paymentReference;
+
     public Order(PaymentType paymentType, BigDecimal amount, OrderStatus status) {
         this.paymentType = paymentType;
         this.amount = amount;
