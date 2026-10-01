@@ -1,5 +1,6 @@
 package com.atk.strategydesignpattern.service;
 
+import com.atk.strategydesignpattern.dto.PaymentOption;
 import com.atk.strategydesignpattern.entity.Order;
 import com.atk.strategydesignpattern.entity.OrderStatus;
 import com.atk.strategydesignpattern.entity.PaymentType;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +55,18 @@ public class PaymentServiceImpl implements PaymentService {
         }
         strategyFor(order.getPaymentType()).pay(order);
         return orderRepository.save(order);
+    }
+
+    @Override
+    public List<PaymentOption> paymentOptions(BigDecimal amount) {
+        // The same question asked of every strategy: each answers with its own fee algorithm.
+        return strategies.values().stream()
+                .map(strategy -> {
+                    BigDecimal fee = strategy.fee(amount);
+                    return new PaymentOption(strategy.type(), fee, amount.add(fee));
+                })
+                .sorted(Comparator.comparing(PaymentOption::total).thenComparing(PaymentOption::type))
+                .toList();
     }
 
     private PaymentStrategy strategyFor(PaymentType paymentType) {

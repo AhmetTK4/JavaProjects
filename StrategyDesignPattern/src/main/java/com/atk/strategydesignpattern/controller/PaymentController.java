@@ -1,5 +1,6 @@
 package com.atk.strategydesignpattern.controller;
 
+import com.atk.strategydesignpattern.dto.PaymentOption;
 import com.atk.strategydesignpattern.entity.Order;
 import com.atk.strategydesignpattern.entity.PaymentType;
 import com.atk.strategydesignpattern.exception.OrderNotFoundException;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -43,5 +45,13 @@ public class PaymentController {
     @GetMapping("/{id}")
     public Order get(@PathVariable Long id) {
         return paymentService.findOrder(id).orElseThrow(() -> new OrderNotFoundException(id));
+    }
+
+    @Operation(summary = "Compare payment methods",
+            description = "Fee and total for the given amount with every payment method, cheapest first")
+    @GetMapping("/payment-options")
+    public List<PaymentOption> paymentOptions(
+            @RequestParam @DecimalMin("0.01") @Digits(integer = 17, fraction = 2) BigDecimal amount) {
+        return paymentService.paymentOptions(amount);
     }
 }
