@@ -61,7 +61,7 @@ From another terminal, try `curl http://localhost:8080/employees/names-uppercase
 
 ## Verification
 
-Each example is an independent Maven project. Run `mvn -B verify` from its directory. The GitHub Actions matrix verifies all ten Maven projects on JDK 21 and JDK 25 on pull requests and `main` (kullanici-servis runs on JDK 21 only until its Quarkus version supports Java 25). Tests and builds do not represent a production deployment. The scripts under `scripts/` are historical deployment simulations and are not run by CI.
+Each example is an independent Maven project. Run `mvn -B verify` from its directory. The GitHub Actions matrix verifies all ten Maven projects on JDK 21 and JDK 25 on pull requests and `main`. Tests and builds do not represent a production deployment. The scripts under `scripts/` are historical deployment simulations and are not run by CI.
 
 To run CI manually, open **Actions → Verify Java examples → Run workflow**.
 Open a completed run's **Artifacts** section to download `build-<project>-<attempt>`
