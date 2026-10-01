@@ -44,9 +44,10 @@ public class DataService {
     /**
      * Write-through: stores the value in the source and puts the returned value into the cache,
      * so the next {@link #getData} is a hit with the new value instead of a stale entry or a miss.
-     * Unlike {@code @Cacheable}, {@code @CachePut} always runs the method.
+     * Unlike {@code @Cacheable}, {@code @CachePut} always runs the method. Keys over 64 characters
+     * are written to the source but not cached, matching the condition on {@link #getData}.
      */
-    @CachePut(cacheNames = CACHE_NAME, key = "#param")
+    @CachePut(cacheNames = CACHE_NAME, key = "#param", condition = "#param.length() <= 64")
     public String updateData(String param, String value) {
         dataSource.save(param, value);
         return value;

@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /** Uses the real SlowDataSource without delay. */
 @SpringBootTest(properties = "app.data.simulated-delay=PT0S")
@@ -39,5 +40,13 @@ class WriteThroughCacheTest {
         dataService.updateData("country", "Türkiye");
         dataService.evictAll();
         assertEquals("Türkiye", dataService.getData("country"), "value must survive eviction");
+    }
+
+    @Test
+    void longKeysAreWrittenToTheSourceButNotCached() {
+        String longKey = "k".repeat(65);
+        dataService.updateData(longKey, "value");
+        assertNull(cacheManager.getCache(DataService.CACHE_NAME).get(longKey));
+        assertEquals("value", dataService.getData(longKey));
     }
 }
