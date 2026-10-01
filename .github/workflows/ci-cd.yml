@@ -20,10 +20,6 @@ jobs:
         project: [GameOfLife, jacoco-demo, StrategyDesignPattern, PlayWithCaches, PlayWithGenerics, PlayWithJson, PlayWithStreams, PlayWithThreads, ProxyDesignPattern, kullanici-servis]
         # 21 is the baseline; 25 catches newer-JDK breakage (e.g. annotation processing changes).
         java: ['21', '25']
-        exclude:
-          # Quarkus 3.15 does not support Java 25; remove after upgrading Quarkus.
-          - project: kullanici-servis
-            java: '25'
     steps:
       - uses: actions/checkout@v7
         with:
